@@ -5,9 +5,6 @@
 #	- $1	ESSID
 #	- $2 	PSK
 
-# test values,
-#ESSID='Blackpearl'
-#PSK='Chungus12'
 ESSID=$1
 PSK=$2
 
