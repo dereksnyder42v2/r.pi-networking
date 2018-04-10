@@ -63,8 +63,6 @@ if __name__ == '__main__':
     else:
         print("Usage: wifi_seek.py [access point name] [access point password]")
         quit()
-        #_TARGET_ESSID = 'Blackpearl'
-        #_TARGET_PSK = 'Chungus12'
 
     '''/
     program control flow
