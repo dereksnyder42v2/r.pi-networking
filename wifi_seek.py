@@ -12,32 +12,51 @@ Mon  2 Apr 22:32:31 UTC 2018
 import subprocess
 import re
 import time
+import codecs
+
+# TODO--
+'''
+replace 
+    subprocess.check_output() 
+calls with
+    subprocess.run() 
+'''
 
 # get current WiFi network name
 #   iwgetid -r
 def currentNetwork():
-    return subprocess.check_output(
-            'iwgetid -r'.split()
-    ).decode('utf-8')
+    run_instance = subprocess.run( 
+            "iwgetid -r".split(),
+            stdout=subprocess.PIPE
+        )
+    # .run() returns a subprocess.CompletedProcess instance
+    #       .returncode (usually 0 if successful)
+    #       .stdout     (output of process)
+    #       .stderr     (error output)
+    current_network_output = codecs.decode(run_instance.stdout, 'utf-8').replace('\n', '')
+
+    return current_network_output
 
 # scan for available WiFi networks
 #   sudo iwlist wlan0 scan
-def availableNetworks( allowNewlines=False ):
-    scanOutput = subprocess.check_output(
-            'iwlist wlan0 scan'.split()
-    ).decode('utf-8')
-    # TODO parse output into list of AP objects
-    if not allowNewlines:
-        scanOutput = scanOutput.replace('\n', '')
-
-    return scanOutput
+def available_networks( allow_newlines=False ):
+    run_instance = subprocess.run(
+            'iwlist wlan0 scan'.split(),
+            stdout=subprocess.PIPE
+    ) 
+    scan_output = codecs.decode(run_instance.stdout, 'utf-8')
+    if not allow_newlines:
+        scan_output = scan_output.replace('\n', '')
+    
+    return scan_output
 
 # listed in ifconfig wlan0 output
 def getIp():
-    ifconfigOutput = subprocess.check_output(
-            'ifconfig wlan0'.split()
-    ).decode('utf-8')
-    #print(ifconfigOutput)
+    run_inst = subprocess.run(
+            'ifconfig wlan0'.split(),
+            stdout=subprocess.PIPE
+    )
+    ifconfigOutput = codecs.decode(run_inst.stdout, 'utf-8')
     ipRegex = r'inet ([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})'
     if re.search(ipRegex, ifconfigOutput):
         return re.search(ipRegex, ifconfigOutput).group(1)
@@ -46,25 +65,34 @@ def getIp():
 
 
 def fastFindNetworks(scanOutput ):
-    essid_regex = re.compile(r'ESSID:"([A-Za-z0-9|\-]+)"')
+    print("Only ESSIDs containing characters A-Z, a-z, 0-9, hyphen (-), and period (.) are allowed.")
+    essid_regex = re.compile(r'ESSID:"([A-Za-z0-9|\-|\.]+)"')
     matches = essid_regex.findall( scanOutput)
     return matches
 
 # TODO refactor return codes
-# TODO 
 
 if __name__ == '__main__':
     
     import sys
+    import os    
 
+    # check if user is root. Program won't work without
+    if os.geteuid() != 0:
+        print("Current user is not root; unable to do anything useful. Exiting")
+        quit()
+
+    # check proper script usage
     if len(sys.argv) == 3:
         _TARGET_ESSID = sys.argv[1]
         _TARGET_PSK = sys.argv[2]
     else:
         print("Usage: wifi_seek.py [access point name] [access point password]")
         quit()
+        #_TARGET_ESSID = 'Blackpearl'
+        #_TARGET_PSK = 'Chungus12'
 
-    '''/
+    '''
     program control flow
 
     1. check if Pi is currently connected to any network
@@ -94,10 +122,9 @@ if __name__ == '__main__':
         quit(3)
 
     # pi is not connected to any WiFi networks
-    ffn = fastFindNetworks( availableNetworks() )
+    ffn = fastFindNetworks( available_networks() )
     for network in ffn:
-        print(network)
-    #input("what's goin on? ... debugging, that's what.")
+        print(network) 
     if _TARGET_ESSID not in ffn:
         # target not in range
         print('Target ESSID \'%s\' not in range.' % _TARGET_ESSID )
@@ -132,7 +159,7 @@ if __name__ == '__main__':
 
     if connectionSuccess:
         '''
-        Code to run once connected goes here
+        !!! Code to run once connected goes here !!!
         '''
         print('Connection successful. IP %s' % getIp() )
         pass
