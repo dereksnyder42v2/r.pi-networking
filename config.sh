@@ -23,8 +23,8 @@ if [ ! -f '/var/log/r.pi-networking/log.txt' ]; then
 fi
 
 crontab_cmd="*/10 * * * * $PWD/wifi_handler.sh"
-printf "\nChecking for cron job ($crontab_cmd) in super user crontab...\n"
-crontab -l | grep "wifi_handler.sh"
+printf "\nChecking for appropriate cron job in super user crontab...\n"
+crontab -l | grep "wifi_handler.sh" 2>&1 >/dev/null
 if [ $? -ne 0 ]; then
 	echo 'Adding new cron job.'
 	crontab -l > mycron
