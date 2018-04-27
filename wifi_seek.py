@@ -1,8 +1,6 @@
 #!/usr/bin/python3
 
-# TODO Ensure getIp() does not return None... or check calls for when it might.
-
-"""/
+"""
 THIS SCRIPT MUST RUN WITH SUPER USER PERMISSIONS
 
 Derek Snyder
@@ -13,14 +11,6 @@ import subprocess
 import re
 import time
 import codecs
-
-# TODO--
-'''
-replace 
-    subprocess.check_output() 
-calls with
-    subprocess.run() 
-'''
 
 # get current WiFi network name
 #   iwgetid -r
@@ -64,13 +54,12 @@ def getIp():
         return ""
 
 
-def fastFindNetworks(scanOutput ):
-    print("Only ESSIDs containing characters A-Z, a-z, 0-9, hyphen (-), and period (.) are allowed.")
+def list_networks(scanOutput ):
+    print("Warning: only ESSIDs containing characters A-Z, a-z, 0-9, hyphen (-), and period (.) are allowed!")
     essid_regex = re.compile(r'ESSID:"([A-Za-z0-9|\-|\.]+)"')
     matches = essid_regex.findall( scanOutput)
     return matches
 
-# TODO refactor return codes
 
 if __name__ == '__main__':
     
@@ -91,7 +80,8 @@ if __name__ == '__main__':
         quit()
         #_TARGET_ESSID = 'Blackpearl'
         #_TARGET_PSK = 'Chungus12'
-
+    
+    # TODO refactor return codes
     '''
     program control flow
 
@@ -118,19 +108,19 @@ if __name__ == '__main__':
 
     if currentNetwork() == _TARGET_ESSID:
         # pi is already connected. nothing to do here
-        print('Already connected to target. IP %s' % getIp() )
+        print("Already connected to target. IP address = %s" % (getIp()) )
         quit(3)
 
     # pi is not connected to any WiFi networks
-    ffn = fastFindNetworks( available_networks() )
-    for network in ffn:
+    networks = list_networks( available_networks() )
+    for network in networks:
         print(network) 
     if _TARGET_ESSID not in ffn:
         # target not in range
-        print('Target ESSID \'%s\' not in range.' % _TARGET_ESSID )
+        print("Target ESSID '%s' not in range." % (_TARGET_ESSID) )
         quit(1)
 
-    '''/
+    '''
     Attempt to connect with special network--
         this is done using wpa_passphrase command:
             wpa_passphrase "essid" "psk" >> /etc/wpa_supplicant/wpa_supplicant.conf
@@ -138,12 +128,16 @@ if __name__ == '__main__':
             wpa_passphrase "essid" "psk" | sudo tee -a /etc/wpa_supplicant.conf > /dev/null
         then reconfigure interface:
             wpa_cli -i wlan0 reconfigure
-    '''
-    # TODO utilize wifi_reconfig.sh program to handle the reconnecting
-    returnVal = subprocess.check_output(
-            ('/home/pi/wifi_reconfig.sh %s %s' % (_TARGET_ESSID, _TARGET_PSK)).split()
-    ).decode('utf-8')
-    print('wifi_reconfig.sh returned %s' % returnVal)
+    ''' 
+
+    returnVal = codecs.decode(
+            subprocess.run(
+                ("/home/pi/wifi_reconfig.sh %s %s" % (_TARGET_ESSID, _TARGET_PSK)).split(),
+                stdout=subprocess.PIPE),
+            'utf-8'
+    )
+    
+    print("wifi_reconfig.sh returned %s" % returnVal)
 
     # check up to 5 times if connection was successful
     connectionSuccess = False
@@ -154,18 +148,16 @@ if __name__ == '__main__':
             connectionSuccess = True
             break
         else:
-            print('%d: IP address not yet acquired. Retrying...' % retryCounter)
+            print("%d: IP address not yet acquired. Retrying..." % retryCounter)
             pass
 
     if connectionSuccess:
         '''
         !!! Code to run once connected goes here !!!
         '''
-        print('Connection successful. IP %s' % getIp() )
+        print("Connection successful. IP %s" % getIp() )
         pass
     else:
-        print('Retry limit reached, no network connection established. Exiting')
+        print("Retry limit reached, no network connection established. Exiting")
         quit(3)
-
-    #print( getIp() )
 

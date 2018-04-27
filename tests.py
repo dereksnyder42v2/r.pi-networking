@@ -25,8 +25,8 @@ if __name__ == '__main__':
     result = wifi_seek.getIp()
     print("\toutput: %s\n\ttype of output: %s" % (result, type(result)))
 
-    #test fastFindNetworks()
-    print("Testing fastFindNetworks()")
-    result = wifi_seek.fastFindNetworks( wifi_seek.available_networks())
+    #test list_networks()
+    print("Testing list_networks()")
+    result = wifi_seek.list_networks( wifi_seek.available_networks())
     print("\toutput: %s" % (result))
 
