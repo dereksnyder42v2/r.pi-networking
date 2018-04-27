@@ -33,4 +33,4 @@ if [ $? -ne 0 ]; then
 fi
 
 echo 'Checking that wifi_handler.sh has proper path...'
-
+sed -i "/\$direc.*/c direc='${PWD}'"
