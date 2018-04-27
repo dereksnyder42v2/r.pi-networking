@@ -14,7 +14,7 @@ import codecs
 
 # get current WiFi network name
 #   iwgetid -r
-def currentNetwork():
+def current_network():
     run_instance = subprocess.run( 
             "iwgetid -r".split(),
             stdout=subprocess.PIPE
@@ -41,7 +41,7 @@ def available_networks( allow_newlines=False ):
     return scan_output
 
 # listed in ifconfig wlan0 output
-def getIp():
+def get_ip():
     run_inst = subprocess.run(
             "ifconfig wlan0".split(),
             stdout=subprocess.PIPE
@@ -70,7 +70,7 @@ if __name__ == '__main__':
     # check if user is root. Program won't work without
     if os.geteuid() != 0:
         print("Current user is not root; unable to do anything useful. Exiting")
-        quit()
+        quit(4)
 
     # check proper script usage
     if len(sys.argv) == 3:
@@ -78,7 +78,7 @@ if __name__ == '__main__':
         _TARGET_PSK = sys.argv[2]
     else:
         print("Usage: wifi_seek.py [access point name] [access point password]")
-        quit()
+        quit(4)
     
     # TODO refactor return codes
     '''
@@ -99,16 +99,17 @@ if __name__ == '__main__':
 
     program return codes
 
-    0: pi is
+    0: pi is already connected, or connection attempt successful
     1: pi isn't connected, target network not in range
     2: target network found; connection attempted, but failed
-    3: pi is already connected
+    3:
+	4: incorrect usage (bad cmd args or uid not sudo)
     '''
 
-    if currentNetwork() == _TARGET_ESSID:
+    if current_network() == _TARGET_ESSID:
         # pi is already connected. nothing to do here
-        print("Already connected to target. IP address = %s" % (getIp()) )
-        quit(3)
+        print("Already connected to target. IP address = %s" % (get_ip()) )
+        quit(0)
 
     # pi is not connected to any WiFi networks
     networks = list_networks( available_networks() )
@@ -142,8 +143,8 @@ if __name__ == '__main__':
     connectionSuccess = False
     for retryCounter in range(5):
         time.sleep(5)
-        ip = getIp()
-        if ip != None and ip != '': # TODO this shouldn't be returning 'None'
+        ip = get_ip()
+        if ip != None and ip != '':
             connectionSuccess = True
             break
         else:
@@ -154,9 +155,9 @@ if __name__ == '__main__':
         '''
         !!! Code to run once connected goes here !!!
         '''
-        print("Connection successful. IP %s" % getIp() )
-        pass
+        print("Connection successful. IP address = %s" % (get_ip()) )
+        quit(0)
     else:
         print("Retry limit reached, no network connection established. Exiting")
-        quit(3)
+        quit(2)
 
