@@ -11,16 +11,20 @@ direc='/home/pi/r.pi-networking'
 targetEssid='Blackpearl'
 targetPsk='Chungus12'
 
-logfile='/var/log/r.pi-networking/log.txt'
-date >> $logfile
+while true; do
+	sleep 10m
 
-cd $direc
-if [ $UID -ne 0 ]; then
-	echo 'Not root' >> $logfile
-	exit
-fi
+	logfile='/var/log/r.pi-networking/log.txt'
+	echo '>>>' `date` >> $logfile
 
-$direc/wifi_seek.py $targetEssid $targetPsk 2>&1 >> $logfile
+	cd $direc
+	if [ $UID -ne 0 ]; then
+		echo 'Not root' >> $logfile
+		exit
+	fi
 
-
+	$direc/wifi_seek.py $targetEssid $targetPsk 2>&1 >> $logfile
+	echo "Program returned $?" >> $logfile
+	echo '>>> DONE' >> $logfile
+done
 

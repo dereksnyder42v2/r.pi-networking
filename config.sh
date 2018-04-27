@@ -22,6 +22,7 @@ if [ ! -f '/var/log/r.pi-networking/log.txt' ]; then
 	touch /var/log/r.pi-networking/log.txt
 fi
 
+# TODO change cron -> init.d
 crontab_cmd="*/10 * * * * $PWD/wifi_handler.sh"
 printf "\nChecking for appropriate cron job in super user crontab...\n"
 crontab -l | grep "wifi_handler.sh" 2>&1 >/dev/null
