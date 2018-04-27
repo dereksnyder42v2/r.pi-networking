@@ -7,4 +7,6 @@
 #    3: [not used]
 #    4: incorrect usage (bad cmd args or uid not sudo)
 
-direc='/Users/derek/Desktop/r.pi-networking'
+direc='/home/pi/r.pi-networking'
+
+cd $direc
