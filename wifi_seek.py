@@ -115,7 +115,7 @@ if __name__ == '__main__':
     networks = list_networks( available_networks() )
     for network in networks:
         print(network) 
-    if _TARGET_ESSID not in ffn:
+    if _TARGET_ESSID not in networks:
         # target not in range
         print("Target ESSID '%s' not in range." % (_TARGET_ESSID) )
         quit(1)
@@ -132,8 +132,8 @@ if __name__ == '__main__':
 
     returnVal = codecs.decode(
             subprocess.run(
-                ("/home/pi/wifi_reconfig.sh %s %s" % (_TARGET_ESSID, _TARGET_PSK)).split(),
-                stdout=subprocess.PIPE),
+                ("%s/wifi_reconfig.sh %s %s" % (os.getcwd(), _TARGET_ESSID, _TARGET_PSK)).split(),
+                stdout=subprocess.PIPE).stdout,
             'utf-8'
     )
     
