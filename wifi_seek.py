@@ -27,8 +27,8 @@ def current_network():
 
     return current_network_output
 
-# scan for available WiFi networks
-#   sudo iwlist wlan0 scan
+# scan for available WiFi networks using,
+#   `sudo iwlist wlan0 scan`
 def available_networks( allow_newlines=False ):
     run_instance = subprocess.run(
             "iwlist wlan0 scan".split(),
@@ -40,7 +40,7 @@ def available_networks( allow_newlines=False ):
     
     return scan_output
 
-# listed in ifconfig wlan0 output
+# get IP address from `ifconfig wlan0`` output
 def get_ip():
     run_inst = subprocess.run(
             "ifconfig wlan0".split(),
@@ -52,7 +52,6 @@ def get_ip():
         return re.search(ipRegex, ifconfigOutput).group(1)
     else:
         return ""
-
 
 def list_networks(scanOutput ):
     print("Warning: only ESSIDs containing characters A-Z, a-z, 0-9, hyphen (-), and period (.) are allowed!")
@@ -130,14 +129,14 @@ if __name__ == '__main__':
             wpa_cli -i wlan0 reconfigure
     ''' 
 
-    returnVal = codecs.decode(
+    return_val = codecs.decode(
             subprocess.run(
                 ("%s/wifi_reconfig.sh %s %s" % (os.getcwd(), _TARGET_ESSID, _TARGET_PSK)).split(),
                 stdout=subprocess.PIPE).stdout,
             'utf-8'
     )
     
-    print("wifi_reconfig.sh returned %s" % returnVal)
+    print("wifi_reconfig.sh returned %s" % return_val)
 
     # check up to 5 times if connection was successful
     connectionSuccess = False

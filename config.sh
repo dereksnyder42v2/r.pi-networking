@@ -32,4 +32,5 @@ if [ $? -ne 0 ]; then
 	rm mycron
 fi
 
+echo 'Checking that wifi_handler.sh has proper path...'
 
