@@ -31,23 +31,23 @@ def currentNetwork():
 #   sudo iwlist wlan0 scan
 def available_networks( allow_newlines=False ):
     run_instance = subprocess.run(
-            'iwlist wlan0 scan'.split(),
+            "iwlist wlan0 scan".split(),
             stdout=subprocess.PIPE
     ) 
-    scan_output = codecs.decode(run_instance.stdout, 'utf-8')
+    scan_output = codecs.decode(run_instance.stdout, "utf-8")
     if not allow_newlines:
-        scan_output = scan_output.replace('\n', '')
+        scan_output = scan_output.replace("\n", "")
     
     return scan_output
 
 # listed in ifconfig wlan0 output
 def getIp():
     run_inst = subprocess.run(
-            'ifconfig wlan0'.split(),
+            "ifconfig wlan0".split(),
             stdout=subprocess.PIPE
     )
-    ifconfigOutput = codecs.decode(run_inst.stdout, 'utf-8')
-    ipRegex = r'inet ([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})'
+    ifconfigOutput = codecs.decode(run_inst.stdout, "utf-8")
+    ipRegex = r"inet ([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3})"
     if re.search(ipRegex, ifconfigOutput):
         return re.search(ipRegex, ifconfigOutput).group(1)
     else:
@@ -56,9 +56,10 @@ def getIp():
 
 def list_networks(scanOutput ):
     print("Warning: only ESSIDs containing characters A-Z, a-z, 0-9, hyphen (-), and period (.) are allowed!")
-    essid_regex = re.compile(r'ESSID:"([A-Za-z0-9|\-|\.]+)"')
+    essid_regex = re.compile(r"ESSID:\"([A-Za-z0-9|\-|\.]+)\"")
     matches = essid_regex.findall( scanOutput)
-    return matches
+    
+	return matches
 
 
 if __name__ == '__main__':
@@ -78,8 +79,6 @@ if __name__ == '__main__':
     else:
         print("Usage: wifi_seek.py [access point name] [access point password]")
         quit()
-        #_TARGET_ESSID = 'Blackpearl'
-        #_TARGET_PSK = 'Chungus12'
     
     # TODO refactor return codes
     '''
