@@ -58,7 +58,7 @@ def list_networks(scanOutput ):
     essid_regex = re.compile(r"ESSID:\"([A-Za-z0-9|\-|\.]+)\"")
     matches = essid_regex.findall( scanOutput)
     
-	return matches
+    return matches
 
 
 if __name__ == '__main__':

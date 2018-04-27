@@ -8,11 +8,19 @@
 #    4: incorrect usage (bad cmd args or uid not sudo)
 
 direc='/home/pi/r.pi-networking'
+targetEssid='Blackpearl'
+targetPsk='Chungus12'
 
 logfile='/var/log/r.pi-networking/log.txt'
+date >> $logfile
 
 cd $direc
 if [ $UID -ne 0 ]; then
-	echo 'Not root.' >> $logfile
+	echo 'Not root' >> $logfile
+	exit
 fi
+
+$direc/wifi_seek.py $targetEssid $targetPsk 2>&1 >> $logfile
+
+
 
