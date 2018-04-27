@@ -15,10 +15,11 @@ if [ ! -f '/usr/bin/python3' ]; then
 	exit 1
 fi
 
-printf '\nChecking for log directory at /var/log/r.pi-networking...\n'
-if [ ! -d '/var/log/r.pi-networking' ]; then
-	echo 'Log dir not found. Making log directory at /var/log/r.pi-networking'
+printf '\nChecking for log file at /var/log/r.pi-networking/log.txt...\n'
+if [ ! -f '/var/log/r.pi-networking/log.txt' ]; then
+	echo 'Log file not found. Making log at /var/log/r.pi-networking'
 	mkdir -p "/var/log/r.pi-networking"
+	touch /var/log/r.pi-networking/log.txt
 fi
 
 crontab_cmd="*/10 * * * * $PWD/wifi_handler.sh"
@@ -34,3 +35,5 @@ fi
 
 printf "\nChecking that wifi_handler.sh has proper path...\n"
 sed -i "/\$direc.*/c direc='${PWD}'" wifi_handler.sh
+
+
