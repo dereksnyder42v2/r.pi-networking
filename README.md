@@ -10,10 +10,16 @@ Change the targetEssid and targetPsk values in 'wifi_handler.sh' to whatever net
 Change the 'sleep 10m' command in 'wifi_handler.sh' to whatever time interval you wish to check network configuration at.
 
 File descriptions:
-- 'r.pi-networking_init' this is the init script, which runs persistently in the background. It should be copied into the /etc/init.d/ directory (on Debian).
-- 'wifi_seek.py' this file checks networks in range, attempts to connect (by calling 'wifi_reconfig.sh') if the target network is detected, and returns a status  code indicating to the caller what exactly happened (0 is success).
-- 'wifi_reconfig.sh' this file writes a new wpa_supplicant.conf, then brings down & brings up the wlan0 networking interface on the system. It is called by 'wifi_seek.py'
-- 'wifi_handler.sh' this is the script which is executed by init process, and is probably the only thing you want to modify for normal use (: It is responsbible for calling 'wifi_seek.py' and logging return codes with timestamps (may be useful for debugging).
-- 'stream_video.py' oddball program I threw in, as an example for what you might want to do once network is established. It runs a server, streaming Raspberry Pi camera footage if 
-- 'tests.py' this program gives examples of the types of output 'wifi_seek.py' functions may return, such as networks in range, current IP address and WiFi network name, etc.
+- 'r.pi-networking_init' 
+this is the init script, which runs persistently in the background. It should be copied into the /etc/init.d/ directory (on Debian), but 'config.sh' does that for you.
+- 'wifi_seek.py' 
+this file checks networks in range, attempts to connect (by calling 'wifi_reconfig.sh') if the target network is detected, and returns a status  code indicating to the caller what exactly happened (0 is success).
+- 'wifi_reconfig.sh' 
+this file writes a new wpa_supplicant.conf, then brings down & brings up the wlan0 networking interface on the system. It is called by 'wifi_seek.py'. My $0.02, don't even try to make this work for a different interface/ USB-WiFi adapter/ etc. 
+- 'wifi_handler.sh' 
+this is the script which is executed by init process, and is probably the only thing you want to modify for normal use (: It is responsbible for calling 'wifi_seek.py' and logging return codes with timestamps (may be useful for debugging).
+- 'stream_video.py' 
+oddball program I threw in, as an example for what you might want to do once network is established. It runs a server, streaming Raspberry Pi camera footage viewable in a web browser of a local PC.   
+- 'tests.py' 
+this program gives examples of the types of output 'wifi_seek.py' functions may return, such as networks in range, current IP address and WiFi network name, etc.
 
