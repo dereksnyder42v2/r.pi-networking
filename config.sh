@@ -22,8 +22,8 @@ if [ ! -f '/var/log/r.pi-networking/log.txt' ]; then
 	touch /var/log/r.pi-networking/log.txt
 fi
 
-# TODO make install script for init.d process
-
+cp 'r.pi-networking_init' /etc/init.d/
+update-rc.d '/etc/init.d/r.pi-networking_init'
 
 printf "\nChecking that wifi_handler.sh has proper path...\n"
 sed -i "/^direc.*/c direc='${PWD}'" wifi_handler.sh
