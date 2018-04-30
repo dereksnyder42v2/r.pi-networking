@@ -1,5 +1,13 @@
 #!/usr/bin/python3
 
+"""
+this script requires super user (`sudo') permissions to function!
+run this script just to see what kinds of output the wifi_seek.py functions give.
+
+Derek Snyder
+Mon 30 Apr 16:50:58 EDT 2018
+"""
+
 import wifi_seek
 
 if __name__ == '__main__':
