@@ -1,5 +1,5 @@
 # r.pi-networking
-(Generally, I think all of the programs here need super used permissions, simply because accessing the init system and network interface are privileged operations.)
+(Generally, I think all of the programs here need super user permissions, simply because accessing the init system and network interface are privileged operations.)
 
 This is a project to reliably and controllably connect to a designated WiFi network when the host system (a Raspberry Pi) may be traveling in and out of range of the desired network.
 It is intended to be run as a persistent 'init' process, checking network settings and searching for the target WiFi network every 10 minutes. Future versions of Debian may further change the 'init' structure, favoring the SystemD model--a SystemD service file could be made instead as need or preference arise. 
