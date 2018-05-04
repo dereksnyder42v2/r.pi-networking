@@ -17,8 +17,8 @@ if __name__ == '__main__':
         quit()
     
     #test currentNetwork()
-    print("Testing currentNetwork()")
-    result = wifi_seek.currentNetwork()
+    print("Testing current_network()")
+    result = wifi_seek.current_network()
     print("\toutput: %s\n\ttype of currentNetwork() output: %s" % (result, type(result)) )
 
     #test available_networks()
